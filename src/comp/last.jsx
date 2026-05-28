@@ -8,21 +8,21 @@ import {
 export default function PopularCoursesSection() {
   const courses = [
     {
-      title: "JavaScript",
+      title: "Genetics",
       lessons: "12 Lessons",
       price: "$200",
       image:
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200",
     },
     {
-      title: "Web Design",
+      title: "Physcology",
       lessons: "10 Lessons",
       price: "$300",
       image:
         "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200",
     },
     {
-      title: "Python Basics",
+      title: "Reproduction",
       lessons: "14 Lessons",
       price: "$250",
       image:
@@ -31,23 +31,23 @@ export default function PopularCoursesSection() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4ecf7] flex items-center justify-center p-8">
+    <div className="min-h-screen  flex items-center justify-center p-8">
       {/* Main Card */}
       <div className="w-full max-w-5xl rounded-[28px] bg-[#c77dff] shadow-2xl p-10">
         
         {/* Header */}
-        <div className="text-center mb-10">
-          <p className="text-pink-200 text-sm font-medium tracking-wide mb-2">
+        <div className="text-center text-white/90 mb-10">
+          <p className="text-sm  font-medium tracking-wide mb-2">
             Our Learning Platform
           </p>
 
-          <h1 className="text-white text-4xl font-bold mb-3">
+          <h1 className=" text-4xl font-bold mb-3">
             Our Popular Courses
           </h1>
 
-          <p className="text-[#f7e8ff] text-sm max-w-2xl mx-auto leading-relaxed">
-            Explore the best online courses designed to improve your coding,
-            programming, and technology skills with practical projects and
+          <p className=" text-sm  max-w-2xl mx-auto leading-relaxed">
+            Explore the best online courses designed to improve your knowledge,
+            ability, and science  skills with real world  and
             expert guidance.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function PopularCoursesSection() {
                 />
 
                 {/* Badge */}
-                <div className="absolute top-4 right-4 bg-[#c77dff] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="absolute top-4 right-4 bg-[#C4419F] text-white text-xs font-semibold px-3 py-1 rounded-full">
                   NEW
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function PopularCoursesSection() {
                   <div className="flex items-center gap-1">
                     <Star
                       size={16}
-                      className="fill-yellow-400 text-yellow-400"
+                      className="fill-[#C4419F] text-[#C4419F]"
                     />
                     <span>4.9</span>
                   </div>
@@ -106,11 +106,11 @@ export default function PopularCoursesSection() {
 
                 {/* Bottom */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[#c77dff] text-2xl font-bold">
+                  <span className="text-[#C4419F] text-2xl font-bold">
                     {course.price}
                   </span>
 
-                  <button className="bg-[#c77dff] hover:bg-[#b65cff] text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300">
+                  <button className="bg-[#C4419F] hover:bg-[#b65cff] text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300">
                     Enroll
                   </button>
                 </div>

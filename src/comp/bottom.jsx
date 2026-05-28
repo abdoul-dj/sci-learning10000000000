@@ -15,7 +15,7 @@ export default function PediatricHero() {
         <div className="px-8 md:px-16 py-14 flex flex-col justify-center bg-gradient-to-br from-[#eef4ff] to-[#f9fbff]">
           
           {/* TAG */}
-          <div className="w-fit bg-blue-100 text-blue-600 px-5 py-2 rounded-full text-sm font-semibold mb-8">
+          <div className="w-fit bg-[#C4419F] px-5 py-2 rounded-full text-sm font-semibold mb-8">
             Trusted Health Knowledge
           </div>
 
@@ -37,7 +37,7 @@ export default function PediatricHero() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-10">
             
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-              <ShieldCheck className="text-blue-500 mb-3" size={30} />
+              <ShieldCheck className="text-[#C4419F] mb-3" size={30} />
               <h3 className="font-semibold text-lg text-gray-900">
                 Remember
               </h3>
@@ -47,7 +47,7 @@ export default function PediatricHero() {
             </div>
 
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-              <BellRing className="text-blue-500 mb-3" size={30} />
+              <BellRing className="text-[#C4419F] mb-3" size={30} />
               <h3 className="font-semibold text-lg text-gray-900">
                 Smart Reminders
               </h3>
@@ -69,7 +69,7 @@ export default function PediatricHero() {
 
           {/* BUTTONS */}
           <div className="flex flex-wrap gap-4 mt-10">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-md flex items-center gap-3 text-lg font-medium transition-all">
+            <button className="bg-[#C4419F] hover:bg-blue-600 px-8 py-4 rounded-md flex items-center gap-3 text-lg font-medium transition-all">
               Get Started
               <ArrowRight size={20} />
             </button>
@@ -97,8 +97,8 @@ export default function PediatricHero() {
 
           {/* FLOATING CARD */}
           <div className="absolute bottom-10 left-10 bg-white rounded-2xl shadow-lg px-5 py-4 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-              <HeartPulse className="text-blue-500" />
+            <div className="w-12 h-12 rounded-full  flex items-center justify-center">
+              <HeartPulse className="text-[#C4419F]" />
             </div>
 
             <div>

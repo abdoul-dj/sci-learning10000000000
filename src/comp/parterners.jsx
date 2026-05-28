@@ -12,12 +12,9 @@ export default function CourseLandingPage() {
       <div className="w-full max-w-5xl bg-white rounded-[28px] shadow-xl overflow-hidden">
         
         {/* Top Navbar */}
-        <div className="bg-[#C4419F] px-8 py-4 flex items-center justify-between">
+        <div className=" px-8 py-4 flex items-center justify-between">
           {/* Logo */}
-          <div className="text-white text-2xl font-bold">
-            There is so many benefits from this system in your health and knowledge
-          </div>
-
+         
           {/* Nav Links */}
       
         </div>
@@ -27,14 +24,10 @@ export default function CourseLandingPage() {
           
           {/* Left Side */}
           <div>
-            {/* Heading */}
             
 
-            {/* Search Bar */}
-         
-
             {/* Image Grid */}
-            <div className="bg-[#f5d4f7] rounded-[22px] p-4 w-fit border-[4px] border-[#C4419F]">
+            <div className=" rounded-[22px] p-4 w-fit ">
               <div className="grid grid-cols-2 gap-4">
                 
                 <img
@@ -99,7 +92,7 @@ export default function CourseLandingPage() {
 
                 <div>
                   <h3 className="font-semibold text-[#2d1b46]">
-                    Short Courses
+                    Short lessons
                   </h3>
                   <p className="text-gray-500 text-sm">
                     Improve your skills fast
@@ -114,7 +107,7 @@ export default function CourseLandingPage() {
 
                 <div>
                   <h3 className="font-semibold text-[#2d1b46]">
-                    Training From Experts
+                    Training From Experiment
                   </h3>
                   <p className="text-gray-500 text-sm">
                     Professional learning paths

@@ -23,7 +23,7 @@ export default function JetCard({
 
           {/* RATING */}
           <div className="absolute bottom-3 right-3 bg-white px-3 py-2 rounded-full flex items-center gap-2 shadow-md">
-            <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center text-white text-xs">
+            <div className="w-4 h-4 rounded-full bg-[#C4419F] flex items-center justify-center text-white text-xs">
               ★
             </div>
 
@@ -54,14 +54,14 @@ export default function JetCard({
               </span>
             </div>
 
-            <p className="text-sm text-blue-500 font-medium">
+            <p className="text-sm text-[#C4419F] font-medium">
               Full Course
             </p>
 
           </div>
 
           {/* BUTTON */}
-          <button className="w-full mt-5 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition">
+          <button className="w-full mt-5 bg-[#C4419F] hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition">
             View Details
           </button>
 
