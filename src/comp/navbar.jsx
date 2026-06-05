@@ -62,17 +62,24 @@ export default function Navbar(){
           <button className={getButtonClass("/certificate")}>certificate</button>
         </Link>
 
-        <a href="/" className="hover:text-blue-500 transition">
-          tips
-        </a>
+       <Link to="/tips">
+          {/* Added dynamic functionality here */}
+          <button className={getButtonClass("/tips")}>Tips</button>
+        </Link>
       </div>
 
       {/* RIGHT */}
       <div className="flex gap-4 ml-25 items-center ">
-        <button className="px-5 py-2 border h-9 text-sm cursor-pointer bg-puple-400 rounded-md font-medium">
-          START
+        <Link to="/signup">
+        <button className={getButtonClass("/tips")} >
+          signup
         </button>
+      </Link>
       
+      
+        
+
+
       </div>
 
     </nav>

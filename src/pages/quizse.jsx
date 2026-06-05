@@ -222,7 +222,7 @@ const QuizCard = memo(({ quiz, onStartQuiz }) => {
         <div className="flex flex-col items-start gap-4 lg:items-center">
           <button
             onClick={() => onStartQuiz(quiz.title)}
-            className="rounded-xl border border-[#C4419F] px-6 py-3 font-semibold text-[#C4419F] transition-all duration-200 hover:bg-[#C4419F] hover:text-white"
+            className="rounded-xl  px-6 py-3 font-semibold text-[#C4419F] transition-all duration-200 hover:bg-[#C4419F] hover:text-white"
           >
             Start Quiz
           </button>
@@ -291,7 +291,7 @@ export default function QuizPage() {
 
     <>
     <Navbar />
-    <div className="min-h-screen  bg-[#fafafa] px-4 py-10 lg:px-10">
+    <div className="min-h-screen  bg-[#f6f6fb]  px-4 py-10 lg:px-10">
       {/* Header */}
       <div className="mb-10 mt-19">
         <h1 className="text-3xl text-[#C4419F] font-bold ">Quizzes</h1>
@@ -383,7 +383,7 @@ export default function QuizPage() {
                 placeholder="Search quizzes..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-12 w-full rounded-md border  bg-white pl-12 pr-4 outline-none  transition-all duration-200 "
+                className="h-12 w-full rounded-md bg-white pl-12 pr-4 outline-none  transition-all duration-200 "
               />
             </div>
 
@@ -393,7 +393,7 @@ export default function QuizPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="h-12 appearance-none rounded-md border  bg-white px-5 pr-12 outline-none"
+                  className="h-12 appearance-none rounded-md   bg-white px-5 pr-12 outline-none"
                 >
                   <option value="newest">Newest First</option>
                   <option value="attempts">Most Attempts</option>

@@ -287,7 +287,7 @@ export default function LessonsSection() {
         <Navbar />
       </div>
 
-      <div className="bg-[#fafafa] min-h-screen px-2 lg:px-10 py-2">
+      <div className="bg-[#f6f6fb] min-h-screen px-2 lg:px-10 py-2">
         {/* top section */}
         <div className="flex flex-col mt-35 lg:flex-row lg:items-center lg:justify-between gap-8">
           {/* search */}
@@ -346,7 +346,7 @@ export default function LessonsSection() {
               ${
                 activeCategory === cat.name
                   ? "bg-[#C4419F] text-white shadow-lg"
-                  : "bg-white border text-gray-700 hover:border-[#C4419F]"
+                  : "bg-white text-gray-700 hover:border-[#C4419F]"
               }`}
             >
               {cat.icon}
@@ -458,7 +458,7 @@ export default function LessonsSection() {
                       src={item.image}
                       alt={item.title}
                       loading="lazy"
-                      className="w-[65px] h-[65px] rounded-md object-cover bg-[#f6f6f6] p-2"
+                      className="w-[65px] h-[65px] rounded-xl object-cover bg-[#f6f6f6] p-2"
                     />
 
                     <div>
@@ -490,7 +490,7 @@ export default function LessonsSection() {
                 prev > 1 ? prev - 1 : prev
               )
             }
-            className="w-[48px] h-[48px] rounded-md border border-gray-200 bg-white flex items-center justify-center"
+            className="w-[48px] h-[48px] rounded-lg border border-gray-200 bg-white flex items-center justify-center"
           >
             <ChevronLeft size={18} />
           </button>
