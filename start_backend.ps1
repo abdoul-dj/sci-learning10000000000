@@ -1,0 +1,1 @@
+cd backend ; $env:PORT='5000' ; Start-Process -FilePath 'node' -ArgumentList 'server.js' -RedirectStandardOutput '..\backend_out.log' -RedirectStandardError '..\backend_err.log' -NoNewWindow ; Start-Sleep -Seconds 5 ; Get-Content '..\backend_out.log' ; Get-Content '..\backend_err.log'

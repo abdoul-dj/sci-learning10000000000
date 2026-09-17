@@ -1,7 +1,8 @@
 import Footer from "../comp/Footer";
 import Navbar from "../comp/navbar";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { getTips } from "../services/tipService.js";
 import {
   Search,
   Clock3,
@@ -31,7 +32,17 @@ import {
  * ✅ Minimal DOM nesting
  */
 
-const tipsData = [
+const iconMap = [BookOpen, BrainCircuit, FlaskConical, Target, ClipboardList, Clock3];
+const colorMap = [
+  { color: "bg-violet-100 text-violet-600", tagColor: "bg-violet-100 text-violet-700" },
+  { color: "bg-green-100 text-green-600", tagColor: "bg-green-100 text-green-700" },
+  { color: "bg-orange-100 text-orange-600", tagColor: "bg-orange-100 text-orange-700" },
+  { color: "bg-blue-100 text-blue-600", tagColor: "bg-blue-100 text-blue-700" },
+  { color: "bg-pink-100 text-pink-600", tagColor: "bg-pink-100 text-pink-700" },
+  { color: "bg-purple-100 text-purple-600", tagColor: "bg-purple-100 text-purple-700" },
+];
+
+const _unusedTipsData = [
   {
     id: 1,
     title: "Active Recall",
@@ -106,14 +117,6 @@ const tipsData = [
   },
 ];
 
-const categories = [
-  "All Tips",
-  "Study Tips",
-  "Science Concepts",
-  "Exam Preparation",
-  "Time Management",
-];
-
 const TipCard = React.memo(({ tip, onSave }) => {
   const Icon = tip.icon;
 
@@ -174,8 +177,29 @@ const TipCard = React.memo(({ tip, onSave }) => {
 export default function TipsPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All Tips");
-  const [tips, setTips] = useState(tipsData);
+  const [tips, setTips] = useState([]);
+  const [categories, setCategories] = useState(["All Tips"]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getTips()
+      .then((data) => {
+        const mapped = data.map((t, i) => ({
+          ...t,
+          description: t.content,
+          time: t.read_time || "3 min read",
+          icon: iconMap[i % iconMap.length],
+          ...colorMap[i % colorMap.length],
+          saved: false,
+        }));
+        setTips(mapped);
+        const cats = ["All Tips", ...new Set(data.map((t) => t.category))];
+        setCategories(cats);
+      })
+      .catch(() => setTips([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const tipsPerPage = 6;
 
@@ -274,8 +298,9 @@ export default function TipsPage() {
         </div>
 
         {/* GRID */}
+        {loading && <p className="text-center text-gray-500 py-10">Loading tips...</p>}
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {paginatedTips.length > 0 ? (
+          {!loading && paginatedTips.length > 0 && (
             paginatedTips.map((tip) => (
               <TipCard
                 key={tip.id}
@@ -283,11 +308,10 @@ export default function TipsPage() {
                 onSave={toggleSave}
               />
             ))
-          ) : (
+          )}
+          {!loading && paginatedTips.length === 0 && (
             <div className="col-span-full flex h-[300px] items-center justify-center rounded-3xl border border-dashed border-gray-300 bg-gray-50">
-              <p className="text-lg text-gray-400">
-                No tips found.
-              </p>
+              <p className="text-lg text-gray-400">No tips found.</p>
             </div>
           )}
         </div>

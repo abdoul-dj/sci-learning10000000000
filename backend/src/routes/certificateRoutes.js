@@ -1,12 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const certificateController = require('../controllers/certificateController');
-const protect = require('../middleware/auth');
-const admin = require('../middleware/admin');
+import { Router } from "express";
+import * as certificateController from "../controllers/certificateController.js";
+import { authenticate } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/admin.js";
 
-router.post('/', protect, certificateController.createCertificate);
-router.get('/user', protect, certificateController.getUserCertificates);
-router.get('/', protect, admin, certificateController.getAllCertificates);
-router.get('/:id', protect, certificateController.getCertificateById);
+const router = Router();
 
-module.exports = router;
+router.post("/request", authenticate, certificateController.createRequest);
+router.get("/my-requests", authenticate, certificateController.getMyRequests);
+router.get("/my-certificates", authenticate, certificateController.getMyCertificates);
+router.get("/:id", authenticate, certificateController.getCertificate);
+
+router.get("/requests", authenticate, requireAdmin, certificateController.getAllRequests);
+router.get("/requests/:id/eligibility", authenticate, requireAdmin, certificateController.checkEligibility);
+router.patch("/requests/:id/approve", authenticate, requireAdmin, certificateController.approve);
+router.patch("/requests/:id/reject", authenticate, requireAdmin, certificateController.reject);
+router.get("/all", authenticate, requireAdmin, certificateController.getAllCertificates);
+
+export default router;

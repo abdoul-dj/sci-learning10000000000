@@ -1,37 +1,34 @@
-import axios from 'axios';
+import { apiRequest } from "./api.js";
 
-const API_URL = '/api/certificates';
+export const createRequest = (data) =>
+  apiRequest("/certificates/request", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 
-export const certificateService = {
-  createCertificate: async (data) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.post(API_URL, data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
+export const getMyRequests = () => apiRequest("/certificates/my-requests");
 
-  getUserCertificates: async () => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/user`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
+export const getMyCertificates = () =>
+  apiRequest("/certificates/my-certificates");
 
-  getCertificateById: async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
+export const getCertificate = (id) =>
+  apiRequest(`/certificates/${id}`);
 
-  getAllCertificates: async () => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(API_URL, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-};
+export const getAllRequests = () => apiRequest("/certificates/requests");
+
+export const approveRequest = (id, adminNotes) =>
+  apiRequest(`/certificates/requests/${id}/approve`, {
+    method: "PATCH",
+    body: JSON.stringify({ admin_notes: adminNotes }),
+  });
+
+export const rejectRequest = (id, adminNotes) =>
+  apiRequest(`/certificates/requests/${id}/reject`, {
+    method: "PATCH",
+    body: JSON.stringify({ admin_notes: adminNotes }),
+  });
+
+export const getAllCertificates = () => apiRequest("/certificates/all");
+
+export const checkEligibility = (id) =>
+  apiRequest(`/certificates/requests/${id}/eligibility`);

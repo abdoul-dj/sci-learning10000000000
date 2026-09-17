@@ -1,56 +1,32 @@
-import axios from 'axios';
+import { apiRequest } from "./api.js";
 
-const API_URL = '/api/quizzes';
-
-export const quizService = {
-  getAllQuizzes: async (filters = {}) => {
-    const response = await axios.get(API_URL, { params: filters });
-    return response.data;
-  },
-
-  getQuizById: async (id) => {
-    const response = await axios.get(`${API_URL}/${id}`);
-    return response.data;
-  },
-
-  createQuiz: async (quizData) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.post(API_URL, quizData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  updateQuiz: async (id, quizData) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.put(`${API_URL}/${id}`, quizData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  deleteQuiz: async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.delete(`${API_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  submitQuiz: async (id, answers) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.post(`${API_URL}/${id}/submit`, { answers }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  getUserAttempts: async (quizId) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/user/attempts`, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: quizId ? { quizId } : {},
-    });
-    return response.data;
-  },
+export const getQuizzes = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return apiRequest(`/quizzes${query ? `?${query}` : ""}`);
 };
+
+export const getQuiz = (id) => apiRequest(`/quizzes/${id}`);
+
+export const getQuizAdmin = (id) => apiRequest(`/quizzes/admin/${id}`);
+
+export const createQuiz = (data) =>
+  apiRequest("/quizzes", { method: "POST", body: JSON.stringify(data) });
+
+export const updateQuiz = (id, data) =>
+  apiRequest(`/quizzes/${id}`, { method: "PUT", body: JSON.stringify(data) });
+
+export const deleteQuiz = (id) =>
+  apiRequest(`/quizzes/${id}`, { method: "DELETE" });
+
+export const submitQuiz = (id, answers) =>
+  apiRequest(`/quizzes/${id}/submit`, {
+    method: "POST",
+    body: JSON.stringify({ answers }),
+  });
+
+export const getMyResults = () => apiRequest("/quizzes/results/my");
+
+export const getAllResults = () => apiRequest("/quizzes/results/all");
+
+export const getResult = (resultId) =>
+  apiRequest(`/quizzes/results/${resultId}`);

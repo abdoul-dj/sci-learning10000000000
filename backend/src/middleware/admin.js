@@ -1,9 +1,6 @@
-const admin = (req, res, next) => {
-  if (req.user && req.user.role === 'ADMIN') {
-    next();
-  } else {
-    res.status(403).json({ message: 'Not authorized as an admin' });
+export const requireAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ message: "Admin access required" });
   }
+  next();
 };
-
-module.exports = admin;

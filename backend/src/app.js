@@ -1,41 +1,59 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const lessonRoutes = require('./routes/lessonRoutes');
-const quizRoutes = require('./routes/quizRoutes');
-const certificateRoutes = require('./routes/certificateRoutes');
+import authRoutes from "./routes/authRoutes.js";
+import lessonRoutes from "./routes/lessonRoutes.js";
+import quizRoutes from "./routes/quizRoutes.js";
+import tipRoutes from "./routes/tipRoutes.js";
+import certificateRoutes from "./routes/certificateRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
+dotenv.config();
 
 const app = express();
 
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const configured = process.env.FRONTEND_URL || "http://localhost:5173";
+      if (!origin || origin === configured || /https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, please try again later.',
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "ScienceLearn API is running" });
 });
-app.use('/api/', limiter);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/lessons', lessonRoutes);
-app.use('/api/quizzes', quizRoutes);
-app.use('/api/certificates', certificateRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/lessons", lessonRoutes);
+app.use("/api/quizzes", quizRoutes);
+app.use("/api/tips", tipRoutes);
+app.use("/api/certificates", certificateRoutes);
+app.use("/api/users", userRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+app.use("/api", (req, res) => {
+  res.status(404).json({ message: "API route not found" });
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  if (err?.name === "CastError") {
+    return res.status(400).json({ message: "Invalid ID" });
+  }
+  if (err?.name === "ValidationError") {
+    return res.status(400).json({ message: err.message });
+  }
+  if (err?.code === 11000) {
+    return res.status(400).json({ message: "Duplicate value" });
+  }
+  res.status(500).json({ message: "Internal server error" });
 });
 
-module.exports = app;
+export default app;

@@ -1,6 +1,8 @@
-import React, { memo, useMemo, useState, useCallback } from "react";
+import React, { memo, useMemo, useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../comp/Footer";
 import Navbar from "../comp/navbar";
+import { getLessons } from "../services/lessonService.js";
 
 import {
   Search,
@@ -19,7 +21,7 @@ import {
 /* -----------------------------
    Optimized Lesson Card
 ----------------------------- */
-const LessonCard = memo(({ lesson, onSave, savedLessons }) => {
+const LessonCard = memo(({ lesson, onSave, savedLessons, onStart }) => {
   const isSaved = savedLessons.includes(lesson.id);
 
   return (
@@ -73,11 +75,11 @@ const LessonCard = memo(({ lesson, onSave, savedLessons }) => {
 
       {/* bottom */}
       <div className="flex items-center justify-between mt-5">
-        <button className="text-sm text-[#C4419F] font-medium hover:underline">
+        <button onClick={() => onStart(lesson.id)} className="text-sm text-[#C4419F] font-medium hover:underline">
           View Details
         </button>
 
-        <button className="bg-[#C4419F] text-white px-3 py-1 rounded-md text-sm hover:opacity-90 transition">
+        <button onClick={() => onStart(lesson.id)} className="bg-[#C4419F] text-white px-3 py-1 rounded-md text-sm hover:opacity-90 transition">
           Start
         </button>
       </div>
@@ -89,93 +91,27 @@ const LessonCard = memo(({ lesson, onSave, savedLessons }) => {
    Main Component
 ----------------------------- */
 export default function LessonsSection() {
-  /* -----------------------------
-     Data Memoized
-  ----------------------------- */
-  const lessons = useMemo(
-    () => [
-      {
-        id: 1,
-        title: "Respiration in Human ",
-        category: "Biology",
-        progress: "60%",
-        bg: "bg-[#f8f8f8]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/2966/2966488.png",
-      },
-      {
-        id: 2,
-        title: "Organic Chemistry Basics",
-        category: "Chemistry",
-        lessons: 6,
-        progress: "40%",
-        bg: "bg-[#f7f8ff]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/2784/2784445.png",
-      },
-      {
-        id: 3,
-        title: "Human Body Systems",
-        category: "Biology",
-        lessons: 10,
-        progress: "35%",
-        bg: "bg-[#f6f7ff]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/4320/4320337.png",
-      },
-      {
-        id: 4,
-        title: "Genetics and Heredity",
-        category: "Biology",
-        lessons: 7,
-        progress: "60%",
-        bg: "bg-[#faf7ff]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/2920/2920329.png",
-      },
-      {
-        id: 5,
-        title: "Ecosystem and Biotic Factors",
-        category: "Environment",
-        lessons: 6,
-        progress: "70%",
-        bg: "bg-[#f4fbf4]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/427/427735.png",
-      },
-      {
-        id: 6,
-        title: "Introduction to Biotechnology",
-        category: "Biotechnology",
-        lessons: 5,
-        progress: "50%",
-        bg: "bg-[#f8f8ff]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/2784/2784448.png",
-      },
-      {
-        id: 7,
-        title: "Inorganic Chemistry",
-        category: "Chemistry",
-        lessons: 6,
-        progress: "45%",
-        bg: "bg-[#fff5f5]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/2784/2784459.png",
-      },
-      {
-        id: 8,
-        title: "Reproduction in Plants",
-        category: "Biology",
-        lessons: 7,
-        progress: "65%",
-        bg: "bg-[#f6fbf6]",
-        image:
-          "https://cdn-icons-png.flaticon.com/512/765/765653.png",
-      },
-    ],
-    []
-  );
+  const navigate = useNavigate();
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getLessons()
+      .then((data) =>
+        setLessons(
+          data.map((l, i) => ({
+            ...l,
+            progress: `${(i + 1) * 10 + 20}%`,
+            bg: "bg-[#f8f8f8]",
+            image: l.image_url || "https://cdn-icons-png.flaticon.com/512/2966/2966488.png",
+          }))
+        )
+      )
+      .catch(() => setLessons([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleStart = useCallback((id) => navigate(`/lessons/${id}`), [navigate]);
 
   /* -----------------------------
      States
@@ -356,6 +292,9 @@ export default function LessonsSection() {
         </div>
 
         {/* cards */}
+        {loading ? (
+          <div className="text-center py-20 text-gray-500">Loading lessons...</div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-7 mt-10">
           {paginatedLessons.map((lesson) => (
             <LessonCard
@@ -363,9 +302,11 @@ export default function LessonsSection() {
               lesson={lesson}
               onSave={handleSave}
               savedLessons={savedLessons}
+              onStart={handleStart}
             />
           ))}
         </div>
+        )}
 
         {/* EMPTY STATE */}
         {paginatedLessons.length === 0 && (

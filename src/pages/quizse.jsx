@@ -1,7 +1,9 @@
 // QuizPage.jsx
-import React, { useMemo, useState, useCallback, memo } from "react";
+import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../comp/Footer";
 import Navbar from "../comp/navbar";
+import { getQuizzes } from "../services/quizService.js";
 import {
   Search,
   Filter,
@@ -37,79 +39,6 @@ const categories = [
   { id: "environment", name: "Environment", count: 3, color: "bg-emerald-100" },
   { id: "biotech", name: "Biotechnology", count: 2, color: "bg-indigo-100" },
   { id: "human", name: "Human Body", count: 3, color: "bg-orange-100" },
-];
-
-const quizData = [
-  {
-    id: 1,
-    title: "Respiration in Human Beings Quiz",
-    category: "biology",
-    categoryLabel: "Biology",
-    questions: 20,
-    duration: "30 min",
-    difficulty: "Easy",
-    attempts: 1245,
-    image:
-      "https://images.unsplash.com/photo-1530210124550-912dc1381cb8?q=80&w=500&auto=format&fit=crop",
-    description:
-      "Test your understanding of the respiratory system and breathing process.",
-  },
-  {
-    id: 2,
-    title: "Organic Chemistry Basics Quiz",
-    category: "chemistry",
-    categoryLabel: "Chemistry",
-    questions: 15,
-    duration: "20 min",
-    difficulty: "Medium",
-    attempts: 987,
-    image:
-      "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=500&auto=format&fit=crop",
-    description:
-      "Test your knowledge of basic organic chemistry concepts.",
-  },
-  {
-    id: 3,
-    title: "Human Body Systems Quiz",
-    category: "human",
-    categoryLabel: "Biology",
-    questions: 25,
-    duration: "35 min",
-    difficulty: "Medium",
-    attempts: 1567,
-    image:
-      "https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?q=80&w=500&auto=format&fit=crop",
-    description:
-      "Test your knowledge of human body systems and their functions.",
-  },
-  {
-    id: 4,
-    title: "Genetics and Heredity Quiz",
-    category: "biology",
-    categoryLabel: "Biology",
-    questions: 20,
-    duration: "30 min",
-    difficulty: "Easy",
-    attempts: 856,
-    image:
-      "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=500&auto=format&fit=crop",
-    description:
-      "Test your understanding of genetics and inheritance patterns.",
-  },
-  {
-    id: 5,
-    title: "Ecosystem and Environment Quiz",
-    category: "environment",
-    categoryLabel: "Environment",
-    questions: 15,
-    duration: "25 min",
-    difficulty: "Medium",
-    attempts: 743,
-    image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=500&auto=format&fit=crop",
-    description:
-      "Test your knowledge of ecosystems and environmental science.",
-  },
 ];
 
 const topPerformers = [
@@ -221,7 +150,7 @@ const QuizCard = memo(({ quiz, onStartQuiz }) => {
         {/* Actions */}
         <div className="flex flex-col items-start gap-4 lg:items-center">
           <button
-            onClick={() => onStartQuiz(quiz.title)}
+            onClick={() => onStartQuiz(quiz.id)}
             className="rounded-xl  px-6 py-3 font-semibold text-[#C4419F] transition-all duration-200 hover:bg-[#C4419F] hover:text-white"
           >
             Start Quiz
@@ -241,9 +170,31 @@ const QuizCard = memo(({ quiz, onStartQuiz }) => {
 ========================================================= */
 
 export default function QuizPage() {
+  const navigate = useNavigate();
+  const [quizData, setQuizData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+
+  useEffect(() => {
+    getQuizzes()
+      .then((data) =>
+        setQuizData(
+          data.map((q) => ({
+            ...q,
+            categoryLabel: q.category,
+            category: q.category?.toLowerCase(),
+            questions: q.question_count,
+            duration: `${q.duration_minutes || 30} min`,
+            attempts: Math.floor(Math.random() * 1000) + 100,
+            image: "https://images.unsplash.com/photo-1530210124550-912dc1381cb8?q=80&w=500&auto=format&fit=crop",
+          }))
+        )
+      )
+      .catch(() => setQuizData([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   /* =========================
      FILTERED QUIZZES
@@ -273,15 +224,15 @@ export default function QuizPage() {
     }
 
     return filtered;
-  }, [search, activeCategory, sortBy]);
+  }, [search, activeCategory, sortBy, quizData]);
 
   /* =========================
      HANDLERS
   ========================= */
 
-  const handleStartQuiz = useCallback((quizName) => {
-    alert(`Starting: ${quizName}`);
-  }, []);
+  const handleStartQuiz = useCallback((quizId) => {
+    navigate(`/quizzes/${quizId}`);
+  }, [navigate]);
 
   const handleCategoryChange = useCallback((id) => {
     setActiveCategory(id);
@@ -413,6 +364,10 @@ export default function QuizPage() {
 
           {/* Quiz List */}
           <div className="space-y-5">
+            {loading && <p className="text-center text-gray-500 py-10">Loading quizzes...</p>}
+            {!loading && filteredQuizzes.length === 0 && (
+              <p className="text-center text-gray-500 py-10">No quizzes found.</p>
+            )}
             {filteredQuizzes.map((quiz) => (
               <QuizCard
                 key={quiz.id}

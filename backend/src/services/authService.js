@@ -1,98 +1,48 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/db');
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+import { signToken } from "../utils/jwt.js";
+import { serializeUser } from "../utils/mongo.js";
 
-const register = async (userData) => {
-  const { email, password, name, role } = userData;
-  
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-  if (existingUser) {
-    throw new Error('User already exists');
+export const register = async ({ fullName, email, password }) => {
+  const existing = await User.findOne({ email: email.toLowerCase() });
+  if (existing) {
+    throw new Error("Email already registered");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      name,
-      role: role || 'STUDENT',
-    },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      avatar: true,
-      createdAt: true,
-    },
+  const passwordHash = await bcrypt.hash(password, 10);
+  const created = await User.create({
+    full_name: fullName,
+    email: email.toLowerCase(),
+    password_hash: passwordHash,
+    role: "student",
   });
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
-
+  const user = serializeUser(created);
+  const token = signToken({ id: user.id, role: user.role });
   return { user, token };
 };
 
-const login = async (email, password) => {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) {
-    throw new Error('Invalid credentials');
+export const login = async ({ email, password }) => {
+  const found = await User.findOne({ email: email.toLowerCase() });
+  if (!found) {
+    throw new Error("Invalid email or password");
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new Error('Invalid credentials');
+  const valid = await bcrypt.compare(password, found.password_hash);
+  if (!valid) {
+    throw new Error("Invalid email or password");
   }
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
-
-  const { password: _, ...userWithoutPassword } = user;
-  return { user: userWithoutPassword, token };
-};
-
-const getProfile = async (userId) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      avatar: true,
-      createdAt: true,
-    },
-  });
-  return user;
-};
-
-const updateProfile = async (userId, updateData) => {
-  if (updateData.password) {
-    updateData.password = await bcrypt.hash(updateData.password, 10);
+  if (found.is_active === false) {
+    throw new Error("This account is inactive. Contact an administrator.");
   }
 
-  const user = await prisma.user.update({
-    where: { id: userId },
-    data: updateData,
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      avatar: true,
-      createdAt: true,
-    },
-  });
-  return user;
+  const user = serializeUser(found);
+  const token = signToken({ id: user.id, role: user.role });
+  return { user, token };
 };
 
-module.exports = {
-  register,
-  login,
-  getProfile,
-  updateProfile,
+export const getProfile = async (userId) => {
+  const user = await User.findById(userId);
+  return serializeUser(user);
 };

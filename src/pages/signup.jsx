@@ -1,13 +1,17 @@
 import React, { useState, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
-  Atom,
-  Facebook,
+  ArrowLeft,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function AuthPage() {
+  const navigate = useNavigate();
+  const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -106,17 +110,27 @@ export default function AuthPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
-    if (isLogin) {
-      console.log("LOGIN", form);
-      alert("Login Successful");
-    } else {
-      console.log("SIGNUP", form);
-      alert("Account Created");
+    setSubmitting(true);
+    try {
+      let user;
+      if (isLogin) {
+        user = await login(form.email, form.password);
+      } else {
+        user = await register(form.fullName, form.email, form.password);
+      }
+      if (user.role === "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/home");
+      }
+    } catch (err) {
+      setErrors({ submit: err.message });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -134,8 +148,15 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-3 lg:p-6">
-      <div className="mx-auto flex min-h-[95vh] max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl">
+    <div className="min-h-screen bg-gray-100 p-3 lg:p-6" style={{ fontFamily: "Poppins, sans-serif" }}>
+      <Link
+        to="/home"
+        className="inline-flex items-center gap-2 text-[#C4419F] font-medium mb-4 hover:underline"
+      >
+        <ArrowLeft size={18} />
+        Back to Home
+      </Link>
+      <div className="mx-auto flex min-h-[90vh] max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl">
 
         {/* LEFT SIDE */}
 
@@ -384,12 +405,16 @@ export default function AuthPage() {
                 </div>
               )}
 
+              {errors.submit && (
+                <p className="text-sm text-red-500 text-center">{errors.submit}</p>
+              )}
+
               <button
-                className="w-full rounded-xl bg-[#C4419F] cursor-pointer  py-4 text-lg font-semibold text-white transition hover:scale-[1.01]"
+                type="submit"
+                disabled={submitting}
+                className="w-full rounded-xl bg-[#C4419F] cursor-pointer py-4 text-lg font-semibold text-white transition hover:scale-[1.01] disabled:opacity-50"
               >
-                {isLogin
-                  ? "Sign In"
-                  : "Create Account"}
+                {submitting ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
               </button>
 
               <div className="flex items-center gap-4 py-2">

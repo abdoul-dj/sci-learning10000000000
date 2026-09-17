@@ -1,37 +1,22 @@
-import axios from 'axios';
+import { apiRequest } from "./api.js";
 
-const API_URL = '/api/users';
-
-export const userService = {
-  getAllUsers: async () => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(API_URL, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  getUserById: async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  updateUserRole: async (id, role) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.put(`${API_URL}/${id}/role`, { role }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  deleteUser: async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.delete(`${API_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
+export const getUsers = async () => {
+  const data = await apiRequest("/users");
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.users)) return data.users;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
 };
+
+export const getUser = (id) => apiRequest(`/users/${id}`);
+
+export const getStats = () => apiRequest("/users/stats");
+
+export const createUser = (data) =>
+  apiRequest("/users", { method: "POST", body: JSON.stringify(data) });
+
+export const updateUser = (id, data) =>
+  apiRequest(`/users/${id}`, { method: "PUT", body: JSON.stringify(data) });
+
+export const deleteUser = (id) =>
+  apiRequest(`/users/${id}`, { method: "DELETE" });

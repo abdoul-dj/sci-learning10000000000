@@ -1,7 +1,20 @@
-const { PrismaClient } = require('@prisma/client');
+import mongoose from "mongoose";
+import { logger } from "../utils/logger.js";
 
-const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-});
+export const connectDB = async () => {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not set");
+  }
 
-module.exports = prisma;
+  mongoose.connection.on("error", () => {
+    logger.error("MongoDB connection error");
+  });
+
+  await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 15000,
+  });
+  logger.info("MongoDB connected");
+};
+
+export default connectDB;

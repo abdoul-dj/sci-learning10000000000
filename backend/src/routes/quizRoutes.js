@@ -1,15 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const quizController = require('../controllers/quizController');
-const protect = require('../middleware/auth');
-const admin = require('../middleware/admin');
+import { Router } from "express";
+import * as quizController from "../controllers/quizController.js";
+import { authenticate } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/admin.js";
 
-router.post('/', protect, admin, quizController.createQuiz);
-router.get('/', quizController.getAllQuizzes);
-router.get('/:id', quizController.getQuizById);
-router.put('/:id', protect, admin, quizController.updateQuiz);
-router.delete('/:id', protect, admin, quizController.deleteQuiz);
-router.post('/:id/submit', protect, quizController.submitQuizAttempt);
-router.get('/user/attempts', protect, quizController.getUserQuizAttempts);
+const router = Router();
 
-module.exports = router;
+router.get("/", quizController.getAll);
+router.get("/results/my", authenticate, quizController.getMyResults);
+router.get("/results/all", authenticate, requireAdmin, quizController.getAllResults);
+router.get("/results/:resultId", authenticate, quizController.getResult);
+router.get("/admin/:id", authenticate, requireAdmin, quizController.getOneAdmin);
+router.get("/:id", quizController.getOne);
+router.post("/", authenticate, requireAdmin, quizController.create);
+router.put("/:id", authenticate, requireAdmin, quizController.update);
+router.delete("/:id", authenticate, requireAdmin, quizController.remove);
+router.post("/:id/submit", authenticate, quizController.submit);
+
+export default router;

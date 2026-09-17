@@ -1,33 +1,19 @@
 {
-  "name": "education-platform-backend",
+  "name": "sciencelearn-backend",
   "version": "1.0.0",
-  "description": "Backend for Education Platform",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "dev": "node --watch server.js",
+    "db:init": "node src/database/init.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.7.0",
-    "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.41.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "helmet": "^7.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2",
-    "prisma": "^5.7.0"
+    "mongoose": "^8.24.4"
   }
 }

@@ -1,7 +1,12 @@
 
 import Footer from "../comp/Footer";
 import Navbar from "../comp/navbar";
-import React, { memo, useMemo, useState, useCallback } from "react";
+import React, { memo, useMemo, useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+import { getMyRequests, getMyCertificates, createRequest } from "../services/certificateService.js";
+import { getQuizzes } from "../services/quizService.js";
+import { getLessons } from "../services/lessonService.js";
 import {
   Search,
   GraduationCap,
@@ -133,41 +138,37 @@ const ActionItem = memo(({ icon, title }) => {
    MAIN PAGE
 ========================================================= */
 export default function QualificationsPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [certificates, setCertificates] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [quizzes, setQuizzes] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [requestForm, setRequestForm] = useState({ quiz_id: "", lesson_id: "", submitted_marks: "" });
 
-  /* =======================================================
-     STATIC DATA MEMOIZED
-  ======================================================= */
-  const certificates = useMemo(
-    () => [
-      {
-        id: 1,
-        title: "Full Stack Web Development",
-        institute: "Quorification Institute",
-        date: "Completed on 28 Apr 2024",
-        status: "Completed",
-        logo: "https://cdn-icons-png.flaticon.com/512/1055/1055687.png",
-      },
-      {
-        id: 2,
-        title: "Python Programming",
-        institute: "Quorification Institute",
-        date: "Completed on 12 Feb 2024",
-        status: "Completed",
-        logo: "https://cdn-icons-png.flaticon.com/512/5968/5968350.png",
-      },
-      {
-        id: 3,
-        title: "Data Structures & Algorithms",
-        institute: "Quorification Institute",
-        date: "Completed on 07 Dec 2023",
-        status: "Completed",
-        logo: "https://cdn-icons-png.flaticon.com/512/2721/2721297.png",
-      },
-    ],
-    []
-  );
+  useEffect(() => {
+    if (user) {
+      getMyCertificates().then((data) =>
+        setCertificates(
+          data.map((c) => ({
+            id: c.id,
+            title: c.title,
+            institute: "ScienceLearn Institute",
+            date: `Issued on ${new Date(c.issued_at).toLocaleDateString()}`,
+            status: "Completed",
+            logo: "https://cdn-icons-png.flaticon.com/512/3135/3135755.png",
+            certificate_number: c.certificate_number,
+          }))
+        )
+      );
+      getMyRequests().then(setRequests);
+    }
+    getQuizzes().then(setQuizzes);
+    getLessons().then(setLessons);
+  }, [user]);
 
   /* =======================================================
      FILTERED DATA
@@ -191,6 +192,29 @@ export default function QualificationsPage() {
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
   }, []);
+
+  const handleRequestSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) { navigate("/signup"); return; }
+    try {
+      await createRequest({
+        quiz_id: requestForm.quiz_id || null,
+        lesson_id: requestForm.lesson_id || null,
+        submitted_marks: requestForm.submitted_marks ? parseFloat(requestForm.submitted_marks) : null,
+      });
+      setShowRequestForm(false);
+      getMyRequests().then(setRequests);
+      alert("Certificate request submitted! Status: Pending");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const statusColor = (status) => {
+    if (status === "Approved") return "bg-green-100 text-green-700";
+    if (status === "Rejected") return "bg-red-100 text-red-700";
+    return "bg-yellow-100 text-yellow-700";
+  };
 
   return (
 
@@ -220,11 +244,15 @@ export default function QualificationsPage() {
               Explore and manage your certifications
             </p>
 
-            <button className="mt-8 bg-gradient-to-r from-violet-700 to-purple-600 hover:scale-[1.01] active:scale-[0.99] transition-transform text-white rounded-3xl px-8 py-5 flex items-center gap-4 shadow-lg text-xl font-semibold">
-              <BadgeCheck size={30} className="text-[#C4419F]" />
+            <button
+              onClick={() => user ? setShowRequestForm(true) : navigate("/signup")}
+              className="mt-8 bg-gradient-to-r from-violet-700 to-purple-600 hover:scale-[1.01] active:scale-[0.99] transition-transform text-white rounded-3xl px-8 py-5 flex items-center gap-4 shadow-lg text-xl font-semibold"
+            >
+              <BadgeCheck size={30} className="text-white" />
               Apply for Certificate
               <ArrowRight size={28} />
             </button>
+            <p className="mt-4 text-sm text-gray-500">Minimum 80% quiz score required for approval</p>
           </div>
 
           {/* RIGHT */}
@@ -320,8 +348,33 @@ export default function QualificationsPage() {
             </div>
           </div>
 
+          {/* REQUESTS */}
+          {user && requests.length > 0 && (
+            <div className="mt-6 mb-6">
+              <h3 className="text-xl font-bold mb-4">Your Requests</h3>
+              <div className="space-y-3">
+                {requests.map((req) => (
+                  <div key={req.id} className="bg-white rounded-2xl border p-4 flex justify-between items-center">
+                    <div>
+                      <p className="font-medium">{req.quiz_title || req.lesson_title || "Certificate Request"}</p>
+                      <p className="text-sm text-gray-500">
+                        Verified: {req.verified_score ? `${req.verified_score}%` : "Pending verification"}
+                      </p>
+                    </div>
+                    <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${statusColor(req.status)}`}>
+                      {req.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* CERTIFICATES */}
           <div className="mt-6 flex flex-col gap-5">
+            {filteredCertificates.length === 0 && (
+              <p className="text-gray-500 text-center py-10">No certificates yet. Complete a quiz with 80%+ and apply!</p>
+            )}
             {filteredCertificates.map((item) => (
               <CertificateCard key={item.id} item={item} />
             ))}
@@ -376,6 +429,31 @@ export default function QualificationsPage() {
           </div>
         </div>
       </div>
+      {showRequestForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <form onSubmit={handleRequestSubmit} className="bg-white rounded-2xl p-6 w-full max-w-md space-y-4">
+            <h3 className="text-xl font-bold">Request Certificate</h3>
+            <p className="text-sm text-gray-500">You need at least 80% on a quiz. Your verified score will be checked from quiz results.</p>
+            <select value={requestForm.quiz_id} onChange={(e) => setRequestForm({ ...requestForm, quiz_id: e.target.value })}
+              className="w-full border rounded-xl p-3" required>
+              <option value="">Select Quiz</option>
+              {quizzes.map((q) => <option key={q.id} value={q.id}>{q.title}</option>)}
+            </select>
+            <select value={requestForm.lesson_id} onChange={(e) => setRequestForm({ ...requestForm, lesson_id: e.target.value })}
+              className="w-full border rounded-xl p-3">
+              <option value="">Related Lesson (optional)</option>
+              {lessons.map((l) => <option key={l.id} value={l.id}>{l.title}</option>)}
+            </select>
+            <input type="number" placeholder="Your score %" value={requestForm.submitted_marks}
+              onChange={(e) => setRequestForm({ ...requestForm, submitted_marks: e.target.value })}
+              className="w-full border rounded-xl p-3" min="0" max="100" />
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setShowRequestForm(false)} className="flex-1 border rounded-xl py-3">Cancel</button>
+              <button type="submit" className="flex-1 bg-[#C4419F] text-white rounded-xl py-3">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      )}
     </section>
     <Footer />
     </>

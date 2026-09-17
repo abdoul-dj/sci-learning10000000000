@@ -1,29 +1,44 @@
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/db');
+import { verifyToken } from "../utils/jwt.js";
+import User from "../models/User.js";
+import { serializeUser } from "../utils/mongo.js";
 
-const protect = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Authentication required" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, email: true, name: true, role: true, avatar: true }
-    });
+    const token = authHeader.split(" ")[1];
+    const decoded = verifyToken(token);
+    const user = await User.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+      return res.status(401).json({ message: "User not found" });
     }
 
-    req.user = user;
+    if (user.is_active === false) {
+      return res.status(401).json({ message: "This account is inactive. Contact an administrator." });
+    }
+
+    req.user = serializeUser(user);
     next();
-  } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+  } catch {
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
-module.exports = protect;
+export const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      const decoded = verifyToken(token);
+      const user = await User.findById(decoded.id);
+      if (user) req.user = serializeUser(user);
+    }
+    next();
+  } catch {
+    next();
+  }
+};

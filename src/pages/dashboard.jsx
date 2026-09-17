@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { getStats } from "../services/userService.js";
 import {
   FiMenu,
   FiSearch,
@@ -29,16 +30,19 @@ export default function Dashboard() {
   const [period, setPeriod] = useState("This Month");
 
   const sidebarLinks = [
-    { name: "Dashboard", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Users", path: "/users" },
-    { name: "Courses", path: "/courses" },
-    { name: "Lessons", path: "/lessons" },
-    { name: "Quizzes", path: "/quizzes" },
-    { name: "Certificates", path: "/certificates" },
-    { name: "Withdrawals", path: "/withdrawals" },
-    { name: "Reports", path: "/reports" },
-    { name: "Settings", path: "/settings" },
+    { name: "Lessons", path: "/admin/lessons" },
+    { name: "Quizzes", path: "/admin/quizzes" },
+    { name: "Tips", path: "/admin/tips" },
+    { name: "Certificates", path: "/admin/certificates" },
   ];
+
+  const [apiStats, setApiStats] = useState(null);
+
+  useEffect(() => {
+    getStats().then(setApiStats).catch(() => {});
+  }, []);
 
   const notifications = [
     "New user registered",
@@ -71,34 +75,34 @@ export default function Dashboard() {
     () => [
       {
         title: "Total Users",
-        value: "24",
+        value: apiStats ? String(apiStats.totalUsers) : "—",
         growth: "+12%",
         icon: <FiUsers />,
         color: "text-green-500",
       },
       {
-        title: "Courses",
-        value: "156",
-        growth: "+8%",
+        title: "Lessons",
+        value: apiStats ? String(apiStats.totalLessons) : "—",
+        growth: "",
         icon: <FiBook />,
-        color: "text-orange-500",
+        color: "text-blue-500",
       },
       {
-        title: "Lessons Completed",
-        value: "78%",
-        growth: "+15%",
+        title: "Quizzes",
+        value: apiStats ? String(apiStats.totalQuizzes) : "—",
+        growth: "",
         icon: <FiCheckSquare />,
         color: "text-yellow-500",
       },
       {
         title: "Certificates",
-        value: "2",
-        growth: "+5%",
+        value: apiStats ? String(apiStats.totalCertificates) : "—",
+        growth: apiStats ? `${apiStats.pendingRequests} pending` : "",
         icon: <FiAward />,
         color: "text-indigo-500",
       },
     ],
-    []
+    [apiStats]
   );
 
   return (

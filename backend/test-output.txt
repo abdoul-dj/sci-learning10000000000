@@ -1,0 +1,84 @@
+﻿
+=== Testing existing backend at http://localhost:5000/api ===
+Backend reachable (got HTTP 401)
+
+=== AUTH ENDPOINTS ===
+[PASS] Register new student (201 created) ΓÇö status=201
+[PASS] Admin login with default credentials (200 OK) ΓÇö status=200
+[PASS] Admin login with wrong password returns 401 ΓÇö status=401
+[PASS] Admin /auth/me returns current user ΓÇö status=200
+[PASS] /auth/me without token returns 401 ΓÇö status=401
+
+=== USERS CRUD (Admin + role checks) ===
+[PASS] Admin GET /users returns array ΓÇö status=200 count=6
+[PASS] Student GET /users forbidden (403) ΓÇö status=403
+[PASS] Admin GET /users/stats returns numeric dashboard KPIs ΓÇö status=200 keys=totalUsers,activeUsers,inactiveUsers,newUsers,totalLessons,totalQuizzes,totalTips,totalCertificates,pendingRequests,totalQuizAttempts
+[PASS] Admin POST /users (create inactive student) ΓÇö 201 ΓÇö status=201 msg=
+[PASS] Created user has id field ΓÇö id=6aabeabebc8d2e86aff9311a
+[FAIL] Created user respects is_active=false flag ΓÇö is_active=true
+[PASS] Admin GET /users/:id returns one user ΓÇö status=200
+[PASS] Admin PUT /users/:id (edit + reactivate) ΓÇö status=200 msg=
+[PASS] Updated user name actually changed ΓÇö new name=Renamed User
+[PASS] Updated user is_active=true persisted ΓÇö is_active=true
+[PASS] Toggle active via PUT /users/:id (simulate toggle button) ΓÇö status=200
+[PASS] Admin DELETE /users/:id ΓÇö 200 ΓÇö status=200
+[PASS] Self-delete guard: admin cannot delete own account (400) ΓÇö status=400 msg=You cannot delete your own account
+
+=== LESSONS CRUD ===
+[PASS] Public GET /lessons returns array ΓÇö status=200 count=3
+[PASS] Public GET /lessons/:id returns a lesson ΓÇö status=200
+[FAIL] Admin POST /lessons (create) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+
+=== QUIZZES CRUD + SUBMIT FLOW ===
+[PASS] Public GET /quizzes returns array ΓÇö status=200 count=1
+[FAIL] Admin POST /quizzes (create quiz with 2 questions) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+
+=== TIPS CRUD ===
+[PASS] Public GET /tips returns array ΓÇö status=200 count=5
+[FAIL] Admin POST /tips (create) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+
+=== CERTIFICATES / REQUESTS ===
+[FAIL] Student GET /certificates/requests returns array ΓÇö status=404 type=object
+[FAIL] Admin GET /certificates/admin/requests returns array ΓÇö status=404
+[FAIL] Admin GET /certificates/admin/certificates returns array ΓÇö status=404
+[FAIL] Student GET /certificates/my returns array ΓÇö status=404
+
+=== Inactive user login test ===
+[FAIL] Inactive user cannot log in (rejected with 401) ΓÇö status=200 msg=
+
+
+============================== FINAL SUMMARY ==============================
+[PASS] Register new student (201 created) ΓÇö status=201
+[PASS] Admin login with default credentials (200 OK) ΓÇö status=200
+[PASS] Admin login with wrong password returns 401 ΓÇö status=401
+[PASS] Admin /auth/me returns current user ΓÇö status=200
+[PASS] /auth/me without token returns 401 ΓÇö status=401
+[PASS] Admin GET /users returns array ΓÇö status=200 count=6
+[PASS] Student GET /users forbidden (403) ΓÇö status=403
+[PASS] Admin GET /users/stats returns numeric dashboard KPIs ΓÇö status=200 keys=totalUsers,activeUsers,inactiveUsers,newUsers,totalLessons,totalQuizzes,totalTips,totalCertificates,pendingRequests,totalQuizAttempts
+[PASS] Admin POST /users (create inactive student) ΓÇö 201 ΓÇö status=201 msg=
+[PASS] Created user has id field ΓÇö id=6aabeabebc8d2e86aff9311a
+[FAIL] Created user respects is_active=false flag ΓÇö is_active=true
+[PASS] Admin GET /users/:id returns one user ΓÇö status=200
+[PASS] Admin PUT /users/:id (edit + reactivate) ΓÇö status=200 msg=
+[PASS] Updated user name actually changed ΓÇö new name=Renamed User
+[PASS] Updated user is_active=true persisted ΓÇö is_active=true
+[PASS] Toggle active via PUT /users/:id (simulate toggle button) ΓÇö status=200
+[PASS] Admin DELETE /users/:id ΓÇö 200 ΓÇö status=200
+[PASS] Self-delete guard: admin cannot delete own account (400) ΓÇö status=400 msg=You cannot delete your own account
+[PASS] Public GET /lessons returns array ΓÇö status=200 count=3
+[PASS] Public GET /lessons/:id returns a lesson ΓÇö status=200
+[FAIL] Admin POST /lessons (create) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+[PASS] Public GET /quizzes returns array ΓÇö status=200 count=1
+[FAIL] Admin POST /quizzes (create quiz with 2 questions) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+[PASS] Public GET /tips returns array ΓÇö status=200 count=5
+[FAIL] Admin POST /tips (create) ΓÇö 201 ΓÇö status=400 msg=Valid category is required
+[FAIL] Student GET /certificates/requests returns array ΓÇö status=404 type=object
+[FAIL] Admin GET /certificates/admin/requests returns array ΓÇö status=404
+[FAIL] Admin GET /certificates/admin/certificates returns array ΓÇö status=404
+[FAIL] Student GET /certificates/my returns array ΓÇö status=404
+[FAIL] Inactive user cannot log in (rejected with 401) ΓÇö status=200 msg=
+
+Total tests: 30  |  Γ£à PASS: 21  |  Γ¥î FAIL: 9
+
+Γ¥î 9 TEST(S) FAILED ΓÇö SEE FULL LOG ABOVE

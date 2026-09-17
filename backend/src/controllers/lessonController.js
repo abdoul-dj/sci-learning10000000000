@@ -1,83 +1,58 @@
-const lessonService = require('../services/lessonService');
+import * as lessonService from "../services/lessonService.js";
 
-const createLesson = async (req, res) => {
+export const getAll = async (req, res) => {
+  try {
+    const lessons = await lessonService.getAllLessons(req.query.category);
+    res.json(lessons);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getOne = async (req, res) => {
+  try {
+    const lesson = await lessonService.getLessonById(req.params.id);
+    if (!lesson) return res.status(404).json({ message: "Lesson not found" });
+    res.json(lesson);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const create = async (req, res) => {
   try {
     const lesson = await lessonService.createLesson(req.body);
     res.status(201).json(lesson);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
-const getAllLessons = async (req, res) => {
-  try {
-    const lessons = await lessonService.getAllLessons(req.query);
-    res.json(lessons);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-const getLessonById = async (req, res) => {
-  try {
-    const lesson = await lessonService.getLessonById(req.params.id);
-    if (!lesson) {
-      return res.status(404).json({ message: 'Lesson not found' });
-    }
-    res.json(lesson);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-const updateLesson = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const lesson = await lessonService.updateLesson(req.params.id, req.body);
+    if (!lesson) return res.status(404).json({ message: "Lesson not found" });
     res.json(lesson);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
-const deleteLesson = async (req, res) => {
+export const remove = async (req, res) => {
   try {
-    const result = await lessonService.deleteLesson(req.params.id);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const deleted = await lessonService.deleteLesson(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Lesson not found" });
+    res.json({ message: "Lesson deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-const updateLessonProgress = async (req, res) => {
+export const getCategories = async (req, res) => {
   try {
-    const { progress, completed } = req.body;
-    const lessonProgress = await lessonService.updateLessonProgress(
-      req.user.id,
-      req.params.id,
-      progress,
-      completed
-    );
-    res.json(lessonProgress);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const categories = await lessonService.getCategories();
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-};
-
-const getUserProgress = async (req, res) => {
-  try {
-    const progress = await lessonService.getUserProgress(req.user.id);
-    res.json(progress);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-module.exports = {
-  createLesson,
-  getAllLessons,
-  getLessonById,
-  updateLesson,
-  deleteLesson,
-  updateLessonProgress,
-  getUserProgress,
 };

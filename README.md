@@ -1,16 +1,63 @@
-# React + Vite
+# ScienceLearn - Educational Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack educational learning platform with lessons, quizzes, tips, and certificates.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** React + Vite + Tailwind CSS
+- **Backend:** Node.js + Express.js
+- **Database:** MySQL (mysql2/promise)
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- MySQL Server running locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+
+```bash
+# Install all dependencies
+npm run install:all
+
+# Configure backend database (edit backend/.env if needed)
+# Default: root user, no password, database: sciencelearn
+
+# Initialize database with schema and seed data
+npm run db:init
+
+# Start both frontend and backend
+npm run dev
+```
+
+### Default Admin Account
+
+- Email: `admin@sciencelearn.com`
+- Password: `Admin@123`
+
+## URLs
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000/api
+
+## Project Structure
+
+```
+├── frontend/          # React client + admin dashboard
+├── backend/           # Express API + MySQL
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── middleware/
+│   │   └── database/
+│   └── server.js
+```
+
+## Features
+
+- Student: Lessons, MCQ Quizzes, Tips, Certificate Requests
+- Admin: Manage lessons, quizzes, tips, certificate approvals
+- 80% minimum score for certificate eligibility
+- JWT authentication with role-based access

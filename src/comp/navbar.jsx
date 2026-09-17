@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar(){
+  const { user, logout, isAdmin } = useAuth();
   // This tracks the current URL path (e.g., "/home", "/lessons")
   const location = useLocation();
 
@@ -70,16 +72,23 @@ export default function Navbar(){
 
       {/* RIGHT */}
       <div className="flex gap-4 ml-25 items-center ">
-        <Link to="/signup">
-        <button className={getButtonClass("/tips")} >
-          signup
-        </button>
-      </Link>
-      
-      
-        
-
-
+        {user ? (
+          <>
+            {isAdmin && (
+              <Link to="/dashboard">
+                <button className={getButtonClass("/dashboard")}>Dashboard</button>
+              </Link>
+            )}
+            <span className="text-sm text-gray-600 hidden lg:block">{user.full_name}</span>
+            <button onClick={logout} className="px-3 py-1.5 rounded-md font-medium text-red-500 hover:bg-red-50">
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link to="/signup">
+            <button className={getButtonClass("/signup")}>Sign In</button>
+          </Link>
+        )}
       </div>
 
     </nav>

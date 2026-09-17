@@ -1,97 +1,77 @@
-const prisma = require('../config/db');
+import Lesson from "../models/Lesson.js";
+import Category from "../models/Category.js";
+import { isValidId, serializeLesson, serializeCategory } from "../utils/mongo.js";
 
-const createLesson = async (lessonData) => {
-  const lesson = await prisma.lesson.create({
-    data: lessonData,
-  });
-  return lesson;
-};
+const populateLesson = (query) => query.populate("category");
 
-const getAllLessons = async (filters = {}) => {
-  const { category, level, published } = filters;
-  
-  const where = {};
-  if (category) where.category = category;
-  if (level) where.level = level;
-  if (published !== undefined) where.published = published === 'true';
-
-  const lessons = await prisma.lesson.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-  });
-  return lessons;
-};
-
-const getLessonById = async (id) => {
-  const lesson = await prisma.lesson.findUnique({
-    where: { id },
-    include: {
-      progress: true,
-    },
-  });
-  return lesson;
-};
-
-const updateLesson = async (id, updateData) => {
-  const lesson = await prisma.lesson.update({
-    where: { id },
-    data: updateData,
-  });
-  return lesson;
-};
-
-const deleteLesson = async (id) => {
-  await prisma.lesson.delete({
-    where: { id },
-  });
-  return { message: 'Lesson deleted successfully' };
-};
-
-const updateLessonProgress = async (userId, lessonId, progress, completed) => {
-  const existingProgress = await prisma.lessonProgress.findUnique({
-    where: {
-      userId_lessonId: {
-        userId,
-        lessonId,
-      },
-    },
-  });
-
-  if (existingProgress) {
-    const updated = await prisma.lessonProgress.update({
-      where: { id: existingProgress.id },
-      data: { progress, completed },
-    });
-    return updated;
+export const getAllLessons = async (category) => {
+  const filter = {};
+  if (category) {
+    const cat = await Category.findOne({ name: category });
+    if (!cat) return [];
+    filter.category = cat._id;
   }
-
-  const newProgress = await prisma.lessonProgress.create({
-    data: {
-      userId,
-      lessonId,
-      progress,
-      completed,
-    },
-  });
-  return newProgress;
+  const lessons = await populateLesson(Lesson.find(filter).sort({ createdAt: -1 }));
+  return lessons.map(serializeLesson);
 };
 
-const getUserProgress = async (userId) => {
-  const progress = await prisma.lessonProgress.findMany({
-    where: { userId },
-    include: {
-      lesson: true,
-    },
-  });
-  return progress;
+export const getLessonById = async (id) => {
+  if (!isValidId(id)) return null;
+  const lesson = await populateLesson(Lesson.findById(id));
+  return serializeLesson(lesson);
 };
 
-module.exports = {
-  createLesson,
-  getAllLessons,
-  getLessonById,
-  updateLesson,
-  deleteLesson,
-  updateLessonProgress,
-  getUserProgress,
+export const createLesson = async (data) => {
+  let categoryRef = null;
+  if (isValidId(data.category_id)) {
+    categoryRef = data.category_id;
+  } else if (data.category) {
+    const found = await Category.findOne({ name: data.category });
+    if (!found) throw new Error("Valid category is required");
+    categoryRef = found._id;
+  } else {
+    throw new Error("Valid category is required");
+  }
+  const created = await Lesson.create({
+    title: data.title,
+    description: data.description,
+    category: categoryRef,
+    content: data.content,
+    difficulty: data.difficulty || "Beginner",
+    image_url: data.image_url || null,
+  });
+  return getLessonById(created._id);
+};
+
+export const updateLesson = async (id, data) => {
+  if (!isValidId(id)) return null;
+  const patch = {
+    title: data.title,
+    description: data.description,
+    content: data.content,
+    image_url: data.image_url || null,
+  };
+  if (isValidId(data.category_id)) {
+    patch.category = data.category_id;
+  } else if (data.category) {
+    const found = await Category.findOne({ name: data.category });
+    if (found) patch.category = found._id;
+  }
+  if (data.difficulty) patch.difficulty = data.difficulty;
+  const updated = await Lesson.findByIdAndUpdate(id, patch, {
+    new: true, runValidators: true,
+  });
+  if (!updated) return null;
+  return getLessonById(id);
+};
+
+export const deleteLesson = async (id) => {
+  if (!isValidId(id)) return false;
+  const deleted = await Lesson.findByIdAndDelete(id);
+  return Boolean(deleted);
+};
+
+export const getCategories = async () => {
+  const categories = await Category.find().sort({ name: 1 });
+  return categories.map(serializeCategory);
 };

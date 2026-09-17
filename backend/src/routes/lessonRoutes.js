@@ -1,16 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const lessonController = require('../controllers/lessonController');
-const protect = require('../middleware/auth');
-const admin = require('../middleware/admin');
-const upload = require('../middleware/upload');
+import { Router } from "express";
+import * as lessonController from "../controllers/lessonController.js";
+import { authenticate } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/admin.js";
 
-router.post('/', protect, admin, upload.single('image'), lessonController.createLesson);
-router.get('/', lessonController.getAllLessons);
-router.get('/:id', lessonController.getLessonById);
-router.put('/:id', protect, admin, upload.single('image'), lessonController.updateLesson);
-router.delete('/:id', protect, admin, lessonController.deleteLesson);
-router.put('/:id/progress', protect, lessonController.updateLessonProgress);
-router.get('/user/progress', protect, lessonController.getUserProgress);
+const router = Router();
 
-module.exports = router;
+router.get("/categories", lessonController.getCategories);
+router.get("/", lessonController.getAll);
+router.get("/:id", lessonController.getOne);
+router.post("/", authenticate, requireAdmin, lessonController.create);
+router.put("/:id", authenticate, requireAdmin, lessonController.update);
+router.delete("/:id", authenticate, requireAdmin, lessonController.remove);
+
+export default router;

@@ -1,0 +1,1 @@
+cd frontend ; Start-Process -FilePath 'npx.cmd' -ArgumentList 'vite','--port','5173' -RedirectStandardOutput '..\frontend_out.log' -RedirectStandardError '..\frontend_err.log' -NoNewWindow ; Start-Sleep -Seconds 12 ; Get-Content '..\frontend_out.log' -Tail 30 ; Get-Content '..\frontend_err.log' -Tail 30
