@@ -240,7 +240,7 @@ export default function TipsPage() {
             <Navbar />
           
     <div className="min-h-screen  p-4 md:p-8">
-      <div className="mx-auto max-w-7xl mt-20 rounded-[34px] border border-gray-100 bg-[#f6f6fb] p-6 shadow-sm md:p-10">
+      <div className="mx-auto max-w-7xl  rounded-[34px] border border-gray-100 bg-[#f6f6fb] p-6 shadow-sm md:p-10">
         {/* HEADER */}
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>

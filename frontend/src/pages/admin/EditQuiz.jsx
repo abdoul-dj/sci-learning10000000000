@@ -81,7 +81,7 @@ export default function AdminEditQuiz() {
             className="w-full border rounded-xl p-3" required />
           <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full border rounded-xl p-3 h-20" />
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className="border rounded-xl p-3" required>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>

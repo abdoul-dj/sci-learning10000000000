@@ -20,38 +20,38 @@ export default function CourseLandingPage() {
         </div>
 
         {/* Main Section */}
-        <div className="grid md:grid-cols-2 gap-10 items-center px-10 py-14">
-          
+        <div className="grid md:grid-cols-2 gap-10 items-center px-5 sm:px-10 py-10 sm:py-14">
+
           {/* Left Side */}
           <div>
-            
+
 
             {/* Image Grid */}
             <div className=" rounded-[22px] p-4 w-fit ">
               <div className="grid grid-cols-2 gap-4">
-                
+
                 <img
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400"
                   alt=""
-                  className="w-36 h-36 object-cover rounded-[24px]"
+                  className="w-24 h-24 sm:w-36 sm:h-36 object-cover rounded-[24px]"
                 />
 
                 <img
                   src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400"
                   alt=""
-                  className="w-36 h-36 object-cover rounded-[24px]"
+                  className="w-24 h-24 sm:w-36 sm:h-36 object-cover rounded-[24px]"
                 />
 
                 <img
                   src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400"
                   alt=""
-                  className="w-36 h-36 object-cover rounded-[24px]"
+                  className="w-24 h-24 sm:w-36 sm:h-36 object-cover rounded-[24px]"
                 />
 
                 <img
                   src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400"
                   alt=""
-                  className="w-36 h-36 object-cover rounded-[24px]"
+                  className="w-24 h-24 sm:w-36 sm:h-36 object-cover rounded-[24px]"
                 />
               </div>
             </div>

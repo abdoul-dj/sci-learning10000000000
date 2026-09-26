@@ -705,7 +705,7 @@ export default function QualificationsPage() {
             HERO
             =================================================== */}
 
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#eef1ff] to-[#f7f3ff] rounded-[40px] p-8 lg:p-14">
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#eef1ff] to-[#f7f3ff] rounded-[40px] p-5 sm:p-8 lg:p-14">
 
           {/* Background circles */}
 
@@ -720,7 +720,7 @@ export default function QualificationsPage() {
 
             <div className="max-w-2xl">
 
-              <h1 className="text-5xl md:text-6xl font-black text-[#0d1230] leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0d1230] leading-tight">
                 Your Qualifications
               </h1>
 
@@ -737,7 +737,7 @@ export default function QualificationsPage() {
                     ? setShowRequestForm(true)
                     : navigate("/signup")
                 }
-                className="mt-8 bg-gradient-to-r from-violet-700 to-purple-600 hover:scale-[1.01] active:scale-[0.99] transition-transform text-white rounded-3xl px-8 py-5 flex items-center gap-4 shadow-lg text-xl font-semibold"
+                className="mt-8 bg-gradient-to-r from-violet-700 to-purple-600 hover:scale-[1.01] active:scale-[0.99] transition-transform text-white rounded-3xl px-5 sm:px-8 py-5 flex items-center gap-3 sm:gap-4 shadow-lg text-base sm:text-xl font-semibold"
               >
 
                 <BadgeCheck

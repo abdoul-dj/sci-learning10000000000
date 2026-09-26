@@ -12,7 +12,7 @@ export default function JetCard({
 }) {
   return (
     <div className="flex px-4">
-      <div className="w-[260px] rounded-2xl border border-gray-200 bg-white p-2 shadow-sm hover:shadow-xl transition duration-300">
+      <div className="w-full sm:w-[260px] rounded-2xl border border-gray-200 bg-white p-2 shadow-sm hover:shadow-xl transition duration-300">
 
         {/* IMAGE */}
         <div className="relative">

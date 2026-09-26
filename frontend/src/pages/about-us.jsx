@@ -20,7 +20,7 @@ return(
       {/* LEFT CONTENT */}
       <div>
         {/* SMALL LABEL */}
-        <div className="inline-flex mt-20 items-center gap-2 px-5 py-2 rounded-full bg-white border border-[#eadcf3] shadow-sm mb-8">
+        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-[#eadcf3] shadow-sm mb-8">
           <div className="w-3 h-3  rounded-full bg-[#c13ca3]" />
           <span className="text-[#c13ca3] font-semibold text-sm tracking-wide">
             ABOUT OUR PLATFORM
@@ -28,7 +28,7 @@ return(
         </div>
 
         {/* TITLE */}
-        <h2 className="text-[52px] md:text-[68px] leading-[1.05] font-black tracking-tight text-[#0b132b]">
+        <h2 className="text-4xl sm:text-[52px] md:text-[68px] leading-[1.05] font-black tracking-tight text-[#0b132b]">
           Helping Science
           <br />
           Students Build
@@ -38,7 +38,7 @@ return(
         </h2>
 
         {/* DESCRIPTION */}
-        <p className="mt-8 text-[19px] leading-[1.9] text-[#3b4252] max-w-2xl">
+        <p className="text-[19px] leading-[1.9] text-[#3b4252] max-w-2xl">
           Our platform was created to help secondary school science students
           strengthen their practical understanding of Biology, Chemistry,
           Health Science, and Environmental studies through modern digital
@@ -53,7 +53,7 @@ return(
         </p>
 
         {/* FEATURES */}
-        <div className="grid sm:grid-cols-2 gap-5 mt-12">
+        <div className="grid sm:grid-cols-2 gap-5 ">
           
           <div className="bg-white rounded-3xl p-6 border border-[#ece7f5] shadow-sm hover:shadow-lg transition-all duration-300">
             <div className="w-14 h-14 rounded-2xl bg-[#f7e4f2] flex items-center justify-center text-2xl">
@@ -123,7 +123,7 @@ return(
         <div className="absolute w-[620px] h-[620px] rounded-full border-2 border-dashed border-[#d9cfe7]" />
 
         {/* MAIN CARD */}
-        <div className="relative z-20 bg-white rounded-[40px] shadow-2xl border border-[#ece7f5] p-10 w-[430px]">
+        <div className="relative z-20 bg-white rounded-[40px] shadow-2xl border border-[#ece7f5] p-6 sm:p-10 w-full max-w-[430px]">
           
           {/* TOP */}
           <div className="flex items-center justify-between">

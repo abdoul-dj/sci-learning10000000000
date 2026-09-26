@@ -82,7 +82,7 @@ export default function BioLearning() {
           {/* LEFT */}
           <div>
 
-            <h1 className="text-6xl mt-32 font-extrabold leading-tight text-gray-900">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900">
 
               Learn Science.
               <br />
@@ -106,7 +106,7 @@ export default function BioLearning() {
             </p>
 
             {/* BUTTONS */}
-            <div className="flex items-center gap-5 mt-10">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5 mt-10">
 
               <button
                 onClick={() => navigate("/lessons")}
@@ -152,7 +152,7 @@ export default function BioLearning() {
           </div>
 
           {/* RIGHT */}
-          <div className="flex justify-center">
+          <div className="flex mt-2">
 
             <img
               src="hjhj.webp"
@@ -169,10 +169,10 @@ export default function BioLearning() {
         <section className="mt-28 relative z-10">
 
           {/* TITLE */}
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
 
             <div>
-              <h2 className="text-4xl font-bold text-gray-800">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
                 Featured Courses
               </h2>
 
@@ -183,7 +183,7 @@ export default function BioLearning() {
 
             <button
               onClick={() => navigate("/lessons")}
-              className="bg-[#C4419F] hover:bg-blue-600 text-white px-5 py-3 rounded-xl transition"
+              className="bg-[#C4419F] hover:bg-blue-600 text-white px-5 py-3 rounded-xl transition self-start sm:self-auto"
             >
               View All
             </button>

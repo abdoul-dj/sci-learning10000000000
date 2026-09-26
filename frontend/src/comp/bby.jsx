@@ -5,7 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 export default function KidCareHero() {
   const navigate = useNavigate();
   return (
-    <div className="w-full min-h-screen bg-[#f5f5f5] mt-40 flex items-center justify-center px-9">
+    <div className="w-full min-h-screen bg-[#f5f5f5] mt-40 flex items-center justify-center px-4 sm:px-9">
       <div className="w-full max-w-4xl bg-white rounded-[28px] overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-2">
         
         {/* LEFT CONTENT */}

@@ -43,7 +43,7 @@ export default function AdminTips() {
 
   return (
     <AdminLayout title="Tips">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <p className="text-gray-500">Manage educational tips</p>
         <button onClick={openCreate} className="flex items-center gap-2 bg-[#C4419F] text-white px-5 py-2.5 rounded-xl">
           <Plus size={18} /> Add Tip

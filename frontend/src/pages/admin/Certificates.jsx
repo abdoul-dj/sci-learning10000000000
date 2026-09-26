@@ -41,7 +41,7 @@ export default function AdminCertificates() {
 
   return (
     <AdminLayout title="Certificates">
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-wrap gap-4 mb-6">
         <button onClick={() => setTab("requests")}
           className={`px-5 py-2 rounded-xl font-medium ${tab === "requests" ? "bg-[#C4419F] text-white" : "bg-white border"}`}>
           Requests ({requests.filter((r) => r.status === "Pending").length} pending)
@@ -53,8 +53,8 @@ export default function AdminCertificates() {
       </div>
 
       {tab === "requests" ? (
-        <div className="bg-white rounded-xl border overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl border overflow-x-auto">
+          <table className="w-full min-w-[720px] whitespace-nowrap">
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left p-4">Student</th>

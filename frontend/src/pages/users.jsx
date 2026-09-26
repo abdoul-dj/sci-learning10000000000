@@ -222,7 +222,7 @@ export default function Users() {
                 value={search}
                 onChange={handleSearch}
                 placeholder="Search Users..."
-                className="pl-10 h-11 w-72 border rounded-xl bg-white"
+                className="pl-10 h-11 w-full sm:w-72 border rounded-xl bg-white"
               />
             </div>
             <select
@@ -292,7 +292,7 @@ export default function Users() {
           {loading ? (
             <div className="p-10 text-center text-gray-500">Loading users...</div>
           ) : (
-            <table className="w-full">
+            <table className="w-full min-w-[640px] whitespace-nowrap">
               <thead>
                 <tr className="bg-slate-50">
                   <th className="text-left p-4">User</th>

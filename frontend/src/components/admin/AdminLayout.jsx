@@ -3,7 +3,7 @@ import {
   FiMenu, FiBook, FiCheckSquare, FiAward, FiUsers,
   FiFileText, FiLayout, FiLogOut,
 } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 const links = [
@@ -17,23 +17,37 @@ const links = [
 
 export default function AdminLayout({ title, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
     navigate("/home");
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+    setMobileOpen(!mobileOpen);
+  };
+
+  const showLabels = sidebarOpen || mobileOpen;
+
   return (
     <div className="min-h-screen bg-gray-100 flex" style={{ fontFamily: "Poppins, sans-serif" }}>
       <aside
-        className={`${sidebarOpen ? "w-64" : "w-20"} bg-white border-r border-gray-200 transition-all duration-300 fixed h-full z-20`}
+        className={`fixed h-full w-64 bg-white border-r border-gray-200 z-30 transition-all duration-300 lg:translate-x-0
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${sidebarOpen ? "lg:w-64" : "lg:w-20"}`}
       >
         <div className="p-5 border-b border-gray-100">
-          <h1 className={`font-bold text-[#C4419F] ${sidebarOpen ? "text-xl" : "text-sm text-center"}`}>
-            {sidebarOpen ? "ScienceLearn" : "SL"}
+          <h1 className={`font-bold text-[#C4419F] ${showLabels ? "text-xl" : "text-sm text-center"}`}>
+            {showLabels ? "ScienceLearn" : "SL"}
           </h1>
         </div>
         <nav className="p-3 space-y-1">
@@ -49,7 +63,7 @@ export default function AdminLayout({ title, children }) {
                 }`}
               >
                 <Icon size={20} />
-                {sidebarOpen && <span className="font-medium">{link.name}</span>}
+                {showLabels && <span className="font-medium">{link.name}</span>}
               </Link>
             );
           })}
@@ -59,23 +73,30 @@ export default function AdminLayout({ title, children }) {
           className="flex items-center gap-3 px-7 py-3 text-red-500 hover:bg-red-50 w-full mt-4"
         >
           <FiLogOut size={20} />
-          {sidebarOpen && "Logout"}
+          {showLabels && "Logout"}
         </button>
       </aside>
 
-      <div className={`flex-1 ${sidebarOpen ? "ml-64" : "ml-20"} transition-all`}>
-        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      <div className={`flex-1 ml-0 transition-all ${sidebarOpen ? "lg:ml-64" : "lg:ml-20"}`}>
+        <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-gray-100 rounded-lg">
+            <button onClick={toggleSidebar} className="p-2 hover:bg-gray-100 rounded-lg">
               <FiMenu size={20} />
             </button>
-            <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">{title}</h2>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 hidden md:block">
             {user?.full_name} (Admin)
           </div>
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

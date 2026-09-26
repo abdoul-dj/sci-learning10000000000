@@ -24,7 +24,7 @@ export default function AdminLessons() {
 
   return (
     <AdminLayout title="Lessons">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <p className="text-gray-500">Manage all lessons</p>
         <Link
           to="/admin/lessons/create"
@@ -37,8 +37,8 @@ export default function AdminLessons() {
       {loading ? (
         <div className="text-center py-12">Loading...</div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl border border-gray-100 overflow-x-auto">
+          <table className="w-full min-w-[480px] whitespace-nowrap">
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left p-4 font-semibold text-gray-700">Title</th>

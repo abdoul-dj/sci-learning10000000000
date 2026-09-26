@@ -19,10 +19,11 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout, user } = useAuth();
 
   const handleLogout = () => {
@@ -30,7 +31,13 @@ export default function Dashboard() {
     navigate("/home");
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024
+  );
+
+  useEffect(() => {
+    if (window.innerWidth < 1024) setSidebarOpen(false);
+  }, [location.pathname]);
   const [search, setSearch] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
@@ -155,6 +162,13 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* MAIN */}
 
       <div className="flex-1">
@@ -162,7 +176,7 @@ export default function Dashboard() {
         {/* TOPBAR */}
 
         <header className="bg-white border-b sticky top-0 z-50">
-          <div className="h-20 px-6 flex justify-between items-center">
+          <div className="h-20 px-4 sm:px-6 flex justify-between items-center">
 
             <div className="flex items-center gap-4">
               <button
@@ -174,10 +188,10 @@ export default function Dashboard() {
               </button>
 
               <div>
-                <h1 className="font-bold text-3xl">
+                <h1 className="font-bold text-2xl sm:text-3xl">
                   Dashboard
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-gray-500 hidden sm:block">
                   Welcome back {user?.full_name || "Admin"}
                 </p>
               </div>
@@ -188,7 +202,7 @@ export default function Dashboard() {
               {/* SEARCH */}
 
               <form
-                className="relative"
+                className="relative hidden md:block"
                 onSubmit={(e) => {
                   e.preventDefault();
                   const term = search.toLowerCase();
@@ -210,13 +224,13 @@ export default function Dashboard() {
                     setSearch(e.target.value)
                   }
                   placeholder="Search admin pages..."
-                  className="w-80 h-12 pl-12 border rounded-xl outline-none"
+                  className="w-48 md:w-64 lg:w-80 h-12 pl-12 border rounded-xl outline-none"
                 />
               </form>
 
               {/* MESSAGES */}
 
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <button
                   onClick={() =>
                     setShowMessages(!showMessages)
@@ -252,7 +266,7 @@ export default function Dashboard() {
 
               {/* NOTIFICATIONS */}
 
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <button
                   onClick={() =>
                     setShowNotifications(
@@ -344,7 +358,7 @@ export default function Dashboard() {
 
         {/* CONTENT */}
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {statsError && (
             <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-xl">{statsError}</div>
           )}

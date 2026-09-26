@@ -22,15 +22,15 @@ export default function AdminQuizzes() {
 
   return (
     <AdminLayout title="Quizzes">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <p className="text-gray-500">Manage all quizzes and MCQ questions</p>
         <Link to="/admin/quizzes/create" className="flex items-center gap-2 bg-[#C4419F] text-white px-5 py-2.5 rounded-xl">
           <Plus size={18} /> Create Quiz
         </Link>
       </div>
       {loading ? <div className="text-center py-12">Loading...</div> : (
-        <div className="bg-white rounded-xl border overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl border overflow-x-auto">
+          <table className="w-full min-w-[560px] whitespace-nowrap">
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left p-4">Title</th>

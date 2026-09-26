@@ -293,10 +293,10 @@ export default function QuizPage() {
     <Navbar />
     <div className="min-h-screen  bg-[#f6f6fb]  px-4 py-10 lg:px-10">
       {/* Header */}
-      <div className="mb-10 mt-19">
+      <div className="mb-10 ">
         <h1 className="text-3xl text-[#C4419F] font-bold ">Quizzes</h1>
 
-        <p className="mt-3 text-lg ">
+        <p className="mt-2 text-lg ">
           Test your knowledge with our science quizzes
         </p>
       </div>

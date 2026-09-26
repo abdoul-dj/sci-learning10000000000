@@ -25,7 +25,7 @@ const LessonCard = memo(({ lesson, onSave, savedLessons, onStart }) => {
   const isSaved = savedLessons.includes(lesson.id);
 
   return (
-    <div className="bg-white mt-6 border border-gray-200 rounded-md p-2 h-60 hover:shadow-md transition-all duration-300">
+    <div className="bg-white mt-6 border border-gray-200 rounded-md p-2 min-h-60 hover:shadow-md transition-all duration-300">
       {/* top */}
       <div className="flex items-start justify-between">
         <div>
@@ -234,7 +234,7 @@ export default function LessonsSection() {
 
       <div className="bg-[#f6f6fb] min-h-screen px-2 lg:px-10 py-2">
         {/* top section */}
-        <div className="flex flex-col mt-35 lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div className="flex flex-col  lg:flex-row lg:items-center lg:justify-between gap-8">
           {/* search */}
           <div className="flex flex-col lg:flex-row gap-4 w-full">
             {/* SEARCH */}
