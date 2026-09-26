@@ -22,7 +22,11 @@ export default function Navbar(){
       {/* LEFT */}
       <div className="flex gap-3 items-center">
         <div className="w-10 h-10 rounded-full overflow-hidden bg-[#C4419F] flex items-center justify-center">
-          <span className="text-white font-bold">SL</span>
+         <img
+  src="/logo2.jfif"
+  alt="ScienceLearn logo"
+  className="h-10 w-10 object-contain"
+/>
         </div>
         <h1 className="text-xl font-bold text-gray-800">
           ScienceLearn
