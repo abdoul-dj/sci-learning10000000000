@@ -22,6 +22,7 @@ export default function BioLearning() {
 
   const courses = [
     {
+      slug: "study-about-human-body",
       image:
         "https://images.unsplash.com/photo-1544016768-982d1554f0b9?q=80&w=1200&auto=format&fit=crop",
       title: "Study About Human Body",
@@ -31,6 +32,7 @@ export default function BioLearning() {
     },
 
     {
+      slug: "chemistry-laboratory",
       image:
         "https://images.unsplash.com/photo-1532187643603-ba119ca4109e?q=80&w=1200&auto=format&fit=crop",
       title: "Chemistry Laboratory",
@@ -40,6 +42,7 @@ export default function BioLearning() {
     },
 
     {
+      slug: "physics-and-motion",
       image:
         "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200&auto=format&fit=crop",
       title: "Physics And Motion",
@@ -49,6 +52,7 @@ export default function BioLearning() {
     },
 
     {
+      slug: "science-space-study",
       image:
         "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=1200&auto=format&fit=crop",
       title: "Science Space Study",
@@ -201,7 +205,7 @@ export default function BioLearning() {
                 lesson={course.lesson}
                 duration={course.duration}
                 rating={course.rating}
-                onView={() => navigate("/lessons")}
+                onView={() => navigate(`/courses/${course.slug}`)}
               />
             ))}
 

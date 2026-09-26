@@ -5,6 +5,7 @@ import Home from "../pages/home.jsx";
 import About from "../pages/about-us.jsx";
 import LessonsSection from "../pages/lessons.jsx";
 import LessonDetails from "../pages/LessonDetails.jsx";
+import CourseDetail from "../pages/CourseDetail.jsx";
 import QuizListPage from "../pages/quizse.jsx";
 import QuizTaking from "../pages/QuizTaking.jsx";
 import QuizResult from "../pages/QuizResult.jsx";
@@ -34,6 +35,7 @@ export default function AppRoutes() {
       <Route path="/about-us" element={<About />} />
       <Route path="/lessons" element={<LessonsSection />} />
       <Route path="/lessons/:id" element={<LessonDetails />} />
+      <Route path="/courses/:slug" element={<CourseDetail />} />
       <Route path="/quizse" element={<QuizListPage />} />
       <Route path="/quizzes/:id" element={<QuizTaking />} />
       <Route

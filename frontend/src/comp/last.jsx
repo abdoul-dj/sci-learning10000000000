@@ -10,6 +10,7 @@ export default function PopularCoursesSection() {
   const navigate = useNavigate();
   const courses = [
     {
+      slug: "genetics",
       title: "Genetics",
       lessons: "12 Lessons",
       price: "$200",
@@ -17,6 +18,7 @@ export default function PopularCoursesSection() {
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200",
     },
     {
+      slug: "physcology",
       title: "Physcology",
       lessons: "10 Lessons",
       price: "$300",
@@ -24,6 +26,7 @@ export default function PopularCoursesSection() {
         "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200",
     },
     {
+      slug: "reproduction",
       title: "Reproduction",
       lessons: "14 Lessons",
       price: "$250",
@@ -113,7 +116,7 @@ export default function PopularCoursesSection() {
                   </span>
 
                   <button
-                    onClick={() => navigate("/lessons")}
+                    onClick={() => navigate(`/courses/${course.slug}`)}
                     className="bg-[#C4419F] hover:bg-[#b65cff] text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
                   >
                     Enroll
