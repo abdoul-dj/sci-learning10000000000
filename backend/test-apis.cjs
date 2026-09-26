@@ -1,5 +1,5 @@
 // Backend API comprehensive test script (CommonJS for node)
-const BASE = 'http://localhost:5000/api';
+const BASE = 'http://localhost:4000/api';
 
 async function req(path, opts = {}) {
   const res = await fetch(BASE + path, {
